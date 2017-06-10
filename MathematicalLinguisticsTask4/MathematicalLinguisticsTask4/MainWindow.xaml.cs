@@ -70,7 +70,15 @@ namespace MathematicalLinguisticsTask4
 
         private void buttonConvert_Click(object sender, RoutedEventArgs e)
         {
-            textBoxPostfixNotation.Text = Converter.Convert(textBoxInfixNotation.Text);
+            try
+            {
+                textBoxPostfixNotation.Text = Converter.Convert(textBoxInfixNotation.Text);
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show("Error", $"Incorrect syntax in the infix notation expression:{Environment.NewLine}{ex.Message}{Environment.NewLine}Please correct it.", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
         }
 
     }

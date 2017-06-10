@@ -11,14 +11,61 @@ namespace MathematicalLinguisticsTask4
         public List<char> Digits { get; set; }
         public List<Operator> Operators { get; set; }
 
+        private Operator LeftBracket = new Operator() { Symbol = '(' };
+        private Operator RightBracket = new Operator() { Symbol = '(' };
+
+        private Queue<char> OutputQueue = new Queue<char>();
+        private Stack<Operator> OperatorsStack = new Stack<Operator>();
+
         public string Convert(string infixNotationInput)
         {
-            string result;
             foreach (char symbol in infixNotationInput)
             {
+                if (IsDigit(symbol))
+                    OutputQueue.Enqueue(symbol);
+                else if (IsOperator(symbol))
+                {
+                    var o1 = GetOperatorFromSymbol(symbol);
+                    while (OperatorsStack.Any() &&
+                        ((o1.IsLeftAssociative && o1.PriorityLevel <= OperatorsStack.Peek().PriorityLevel) ||
+                           (o1.IsRightAssociative && o1.PriorityLevel < OperatorsStack.Peek().PriorityLevel)))
+                    {
+                        var poppedOperator = OperatorsStack.Pop();
+                        OutputQueue.Enqueue(poppedOperator.Symbol);
+                    }
+                    OperatorsStack.Push(o1);
+                }
+                else if (symbol.Equals(LeftBracket.Symbol))
+                    OperatorsStack.Push(LeftBracket);
+                else if (symbol.Equals(RightBracket.Symbol))
+                {
+                    if (!OperatorsStack.Any())
+                        throw new InvalidOperationException("Missing left bracket.");
+
+                    while(!OperatorsStack.Peek().Equals(LeftBracket))
+                    {
+                        var poppedOperator = OperatorsStack.Pop();
+                        OutputQueue.Enqueue(poppedOperator.Symbol);
+                    }
+                    OperatorsStack.Pop();
+                }
 
             }
-            return result;
+
+            StringBuilder resultBuilder = new StringBuilder();
+            while (OutputQueue.Any())
+                resultBuilder.Append(OutputQueue.Dequeue());
+
+            return resultBuilder.ToString();
         }
+
+        private bool IsDigit(char symbol)
+            => Digits.Contains(symbol);
+
+        private bool IsOperator(char symbol)
+            => Operators.Select(o => o.Symbol).Contains(symbol);
+
+        private Operator GetOperatorFromSymbol(char symbol)
+            => Operators.SingleOrDefault(o => o.Symbol.Equals(symbol));
     }
 }
