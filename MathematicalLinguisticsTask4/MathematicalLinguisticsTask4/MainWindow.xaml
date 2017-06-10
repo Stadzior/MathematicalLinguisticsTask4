@@ -17,7 +17,7 @@
             Margin="10,10,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            TextWrapping="Wrap" />
+            TextWrapping="Wrap" TextChanged="textBoxInfixNotation_TextChanged" />
         <TextBox
             x:Name="textBoxPostfixNotation"
             Width="497"

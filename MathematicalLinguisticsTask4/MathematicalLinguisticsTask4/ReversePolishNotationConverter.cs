@@ -55,7 +55,12 @@ namespace MathematicalLinguisticsTask4
                     }
                     OperatorsStack.Pop();
                 }
+            }
 
+            while(OperatorsStack.Any())
+            {
+                var poppedOperator = OperatorsStack.Pop();
+                OutputQueue.Enqueue(poppedOperator.Symbol);
             }
 
             StringBuilder resultBuilder = new StringBuilder();

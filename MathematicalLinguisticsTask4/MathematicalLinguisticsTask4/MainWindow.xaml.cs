@@ -85,5 +85,10 @@ namespace MathematicalLinguisticsTask4
 
         }
 
+        private void textBoxInfixNotation_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            textBox.Text = textBox.Text.Replace(" ", "");
+        }
     }
 }
