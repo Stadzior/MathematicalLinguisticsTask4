@@ -74,9 +74,13 @@ namespace MathematicalLinguisticsTask4
             {
                 textBoxPostfixNotation.Text = Converter.Convert(textBoxInfixNotation.Text);
             }
-            catch (InvalidOperationException ex)
+            catch (ArgumentException ex)
             {
-                MessageBox.Show("Error", $"Incorrect syntax in the infix notation expression:{Environment.NewLine}{ex.Message}{Environment.NewLine}Please correct it.", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(
+                    $"Incorrect syntax in the infix notation expression:{Environment.NewLine}{ex.Message}{Environment.NewLine}Please correct it.",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
             }
 
         }

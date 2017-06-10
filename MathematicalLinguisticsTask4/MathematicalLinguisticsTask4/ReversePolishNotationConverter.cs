@@ -12,7 +12,7 @@ namespace MathematicalLinguisticsTask4
         public List<Operator> Operators { get; set; }
 
         private Operator LeftBracket = new Operator() { Symbol = '(' };
-        private Operator RightBracket = new Operator() { Symbol = '(' };
+        private Operator RightBracket = new Operator() { Symbol = ')' };
 
         private Queue<char> OutputQueue = new Queue<char>();
         private Stack<Operator> OperatorsStack = new Stack<Operator>();
@@ -21,12 +21,15 @@ namespace MathematicalLinguisticsTask4
         {
             foreach (char symbol in infixNotationInput)
             {
+                if (IsUnrecognized(symbol))
+                    throw new ArgumentException($"Unrecognized symbol \"{symbol}\".");
+
                 if (IsDigit(symbol))
                     OutputQueue.Enqueue(symbol);
                 else if (IsOperator(symbol))
                 {
                     var o1 = GetOperatorFromSymbol(symbol);
-                    while (OperatorsStack.Any() &&
+                    while (OperatorsStack.Any() && !OperatorsStack.Peek().Equals(LeftBracket) &&
                         ((o1.IsLeftAssociative && o1.PriorityLevel <= OperatorsStack.Peek().PriorityLevel) ||
                            (o1.IsRightAssociative && o1.PriorityLevel < OperatorsStack.Peek().PriorityLevel)))
                     {
@@ -40,12 +43,15 @@ namespace MathematicalLinguisticsTask4
                 else if (symbol.Equals(RightBracket.Symbol))
                 {
                     if (!OperatorsStack.Any())
-                        throw new InvalidOperationException("Missing left bracket.");
+                        throw new ArgumentException("Missing left bracket.");
 
                     while(!OperatorsStack.Peek().Equals(LeftBracket))
                     {
                         var poppedOperator = OperatorsStack.Pop();
                         OutputQueue.Enqueue(poppedOperator.Symbol);
+
+                        if (!OperatorsStack.Any())
+                            throw new ArgumentException("Missing left bracket.");
                     }
                     OperatorsStack.Pop();
                 }
@@ -67,5 +73,11 @@ namespace MathematicalLinguisticsTask4
 
         private Operator GetOperatorFromSymbol(char symbol)
             => Operators.SingleOrDefault(o => o.Symbol.Equals(symbol));
+
+        private bool IsUnrecognized(char symbol)
+            => !IsDigit(symbol) &&
+            !IsOperator(symbol) &&
+            !LeftBracket.Symbol.Equals(symbol) &&
+            !RightBracket.Symbol.Equals(symbol);
     }
 }
