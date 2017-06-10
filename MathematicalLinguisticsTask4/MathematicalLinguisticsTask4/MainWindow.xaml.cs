@@ -20,9 +20,21 @@ namespace MathematicalLinguisticsTask4
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly ReversePolishNotationConverter Converter = new ReversePolishNotationConverter()
+        {
+            Digits = new List<char> { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
+
+        };
+
         public MainWindow()
         {
             InitializeComponent();
         }
+
+        private void buttonConvert_Click(object sender, RoutedEventArgs e)
+        {
+            textBoxPostfixNotation.Text = Converter.Convert(textBoxInfixNotation.Text);
+        }
+
     }
 }

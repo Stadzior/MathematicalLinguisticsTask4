@@ -1,12 +1,40 @@
-﻿<Window x:Class="MathematicalLinguisticsTask4.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MathematicalLinguisticsTask4"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+﻿<Window
+    x:Class="MathematicalLinguisticsTask4.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MathematicalLinguisticsTask4"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="MainWindow"
+    Width="525"
+    Height="217.82"
+    mc:Ignorable="d">
     <Grid>
-        
+        <TextBox
+            x:Name="textBoxInfixNotation"
+            Width="497"
+            Height="51"
+            Margin="10,10,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            TextWrapping="Wrap" />
+        <TextBox
+            x:Name="textBoxPostfixNotation"
+            Width="497"
+            Height="51"
+            Margin="10,126,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            TextWrapping="Wrap" />
+        <Button
+            x:Name="buttonConvert"
+            Width="190"
+            Height="36"
+            Margin="167,85,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Click="buttonConvert_Click"
+            Content="Convert To Reverse Polish Notation" />
+
     </Grid>
 </Window>
