@@ -22,8 +22,45 @@ namespace MathematicalLinguisticsTask4
     {
         private readonly ReversePolishNotationConverter Converter = new ReversePolishNotationConverter()
         {
-            Digits = new List<char> { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
-
+            Digits = new List<char>() { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' },
+            Operators = new List<Operator>()
+            {
+                new Operator()
+                {
+                    Symbol = '+',
+                    IsLeftAssociative = true,
+                    IsRightAssociative = true,
+                    PriorityLevel = 0
+                },
+                new Operator()
+                {
+                    Symbol = '-',
+                    IsLeftAssociative = true,
+                    IsRightAssociative = false,
+                    PriorityLevel = 0
+                },
+                new Operator()
+                {
+                    Symbol = '*',
+                    IsLeftAssociative = true,
+                    IsRightAssociative = true,
+                    PriorityLevel = 1
+                },
+                new Operator()
+                {
+                    Symbol = '/',
+                    IsLeftAssociative = true,
+                    IsRightAssociative = false,
+                    PriorityLevel = 1
+                },
+                new Operator()
+                {
+                    Symbol = '^',
+                    IsLeftAssociative = false,
+                    IsRightAssociative = true,
+                    PriorityLevel = 2
+                }
+            }
         };
 
         public MainWindow()

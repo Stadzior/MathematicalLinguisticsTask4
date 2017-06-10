@@ -13,10 +13,12 @@ namespace MathematicalLinguisticsTask4
 
         public string Convert(string infixNotationInput)
         {
+            string result;
             foreach (char symbol in infixNotationInput)
             {
 
             }
+            return result;
         }
     }
 }
