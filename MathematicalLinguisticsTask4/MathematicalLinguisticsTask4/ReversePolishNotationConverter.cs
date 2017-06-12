@@ -26,12 +26,11 @@ namespace MathematicalLinguisticsTask4
                 if (IsUnrecognized(symbol))
                     throw new ArgumentException($"Unrecognized symbol \"{symbol}\".");
 
-                if (i>0 && IsDigit(infixNotationInput[i-1]))
-
-
                 if (IsDigit(symbol))
-                    if(IsDigit)
-                    OutputQueue.Enqueue(symbol.ToString());
+                    if (i > 0 && IsDigit(infixNotationInput[i - 1]))
+                        OutputQueue.Enqueue(OutputQueue.Dequeue() + symbol.ToString());
+                    else
+                        OutputQueue.Enqueue(symbol.ToString());
                 else if (IsOperator(symbol))
                 {
                     var o1 = GetOperatorFromSymbol(symbol);
@@ -73,6 +72,7 @@ namespace MathematicalLinguisticsTask4
             while (OutputQueue.Any())
             {
                 resultBuilder.Append(OutputQueue.Dequeue());
+                resultBuilder.Append(' ');
             }
 
             return resultBuilder.ToString();
