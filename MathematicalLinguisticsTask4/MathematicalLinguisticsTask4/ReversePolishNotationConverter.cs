@@ -19,6 +19,8 @@ namespace MathematicalLinguisticsTask4
 
         public string Convert(string infixNotationInput)
         {
+            infixNotationInput = infixNotationInput.Replace(" ", "");
+            infixNotationInput = AddMultiplicationOnOperatorMissing(infixNotationInput);
             for (int i = 0; i < infixNotationInput.Length; i++)
             {
                 var symbol = infixNotationInput[i];
@@ -68,6 +70,9 @@ namespace MathematicalLinguisticsTask4
                 OutputQueue.Enqueue(poppedOperator.Symbol.ToString());
             }
 
+            //if (OutputQueue.Contains("("))
+            //    throw new ArgumentException("Incorrect brackets.");
+
             StringBuilder resultBuilder = new StringBuilder();
             while (OutputQueue.Any())
             {
@@ -76,6 +81,29 @@ namespace MathematicalLinguisticsTask4
             }
 
             return resultBuilder.ToString();
+        }
+
+        private string AddMultiplicationOnOperatorMissing(string infixNotationInput)
+        {
+            var result = infixNotationInput;
+            int i = 1;
+            int j = 0;
+            while(i<infixNotationInput.Length-1)
+            { 
+                var symbol = infixNotationInput[i];
+                if (symbol.Equals('(') && IsDigit(infixNotationInput[i - 1]))
+                {
+                    result = result.Insert(i+j, "*");
+                    j++;
+                }
+                else if (symbol.Equals(')') && IsDigit(infixNotationInput[i + 1]))
+                {
+                    result = result.Insert(i + j+1, "*");
+                    j++;
+                }
+                i++;
+            }
+            return result;
         }
 
         private bool IsDigit(char symbol)
