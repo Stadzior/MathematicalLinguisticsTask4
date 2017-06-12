@@ -21,6 +21,10 @@ namespace MathematicalLinguisticsTask4
         {
             infixNotationInput = infixNotationInput.Replace(" ", "");
             infixNotationInput = AddMultiplicationOnOperatorMissing(infixNotationInput);
+
+            var negativeValueEncountered = false;
+            var tempNumber = new StringBuilder();
+
             for (int i = 0; i < infixNotationInput.Length; i++)
             {
                 var symbol = infixNotationInput[i];
@@ -28,39 +32,64 @@ namespace MathematicalLinguisticsTask4
                 if (IsUnrecognized(symbol))
                     throw new ArgumentException($"Unrecognized symbol \"{symbol}\".");
 
-                if (IsDigit(symbol))
-                    if (i > 0 && IsDigit(infixNotationInput[i - 1]))
-                        OutputQueue.Enqueue(OutputQueue.Dequeue() + symbol.ToString());
-                    else
-                        OutputQueue.Enqueue(symbol.ToString());
-                else if (IsOperator(symbol))
+                if (negativeValueEncountered)
                 {
-                    var o1 = GetOperatorFromSymbol(symbol);
-                    while (OperatorsStack.Any() && !OperatorsStack.Peek().Equals(LeftBracket) &&
-                        ((o1.IsLeftAssociative && o1.PriorityLevel <= OperatorsStack.Peek().PriorityLevel) ||
-                           (o1.IsRightAssociative && o1.PriorityLevel < OperatorsStack.Peek().PriorityLevel)))
+                    if (IsDigit(symbol))
                     {
-                        var poppedOperator = OperatorsStack.Pop();
-                        OutputQueue.Enqueue(poppedOperator.Symbol.ToString());
+                        tempNumber.Append("-");
+                        tempNumber.Append(symbol);
+                        negativeValueEncountered = false;
                     }
-                    OperatorsStack.Push(o1);
+                    else
+                        throw new ArgumentException("Minus sign has invalid symbol on it's right-hand side.");
                 }
-                else if (symbol.Equals(LeftBracket.Symbol))
-                    OperatorsStack.Push(LeftBracket);
-                else if (symbol.Equals(RightBracket.Symbol))
+                else
                 {
-                    if (!OperatorsStack.Any())
-                        throw new ArgumentException("Missing left bracket.");
 
-                    while(!OperatorsStack.Peek().Equals(LeftBracket))
+                    if (IsDigit(symbol))
                     {
-                        var poppedOperator = OperatorsStack.Pop();
-                        OutputQueue.Enqueue(poppedOperator.Symbol.ToString());
+                        tempNumber.Append(symbol);
+                        if (i > infixNotationInput.Length - 2 || !IsDigit(infixNotationInput[i + 1]))
+                        {
+                            OutputQueue.Enqueue(tempNumber.ToString());
+                            tempNumber.Clear();
+                        }
+                    }
+                    else if (IsOperator(symbol))
+                    {
+                        var o1 = GetOperatorFromSymbol(symbol);
 
+                        if (o1.Symbol.Equals('-') && (i == 0 || !IsDigit(infixNotationInput[i - 1])))
+                            negativeValueEncountered = true;
+                        else
+                        {
+                            while (OperatorsStack.Any() && !OperatorsStack.Peek().Equals(LeftBracket) &&
+                                ((o1.IsLeftAssociative && o1.PriorityLevel <= OperatorsStack.Peek().PriorityLevel) ||
+                                (o1.IsRightAssociative && o1.PriorityLevel < OperatorsStack.Peek().PriorityLevel)))
+                            {
+                                var poppedOperator = OperatorsStack.Pop();
+                                OutputQueue.Enqueue(poppedOperator.Symbol.ToString());
+                            }
+                            OperatorsStack.Push(o1);
+                        }
+                    }
+                    else if (symbol.Equals(LeftBracket.Symbol))
+                        OperatorsStack.Push(LeftBracket);
+                    else if (symbol.Equals(RightBracket.Symbol))
+                    {
                         if (!OperatorsStack.Any())
                             throw new ArgumentException("Missing left bracket.");
+
+                        while (!OperatorsStack.Peek().Equals(LeftBracket))
+                        {
+                            var poppedOperator = OperatorsStack.Pop();
+                            OutputQueue.Enqueue(poppedOperator.Symbol.ToString());
+
+                            if (!OperatorsStack.Any())
+                                throw new ArgumentException("Missing left bracket.");
+                        }
+                        OperatorsStack.Pop();
                     }
-                    OperatorsStack.Pop();
                 }
             }
 
@@ -69,9 +98,6 @@ namespace MathematicalLinguisticsTask4
                 var poppedOperator = OperatorsStack.Pop();
                 OutputQueue.Enqueue(poppedOperator.Symbol.ToString());
             }
-
-            //if (OutputQueue.Contains("("))
-            //    throw new ArgumentException("Incorrect brackets.");
 
             StringBuilder resultBuilder = new StringBuilder();
             while (OutputQueue.Any())
